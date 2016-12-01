@@ -1,8 +1,8 @@
 # these packages were installed with packrat
-library('shiny')
-library('data.table')
-library('ggplot2')
+library('shiny') # 0.14.2 
+library('data.table') # 1.9.8
+library('ggplot2') # 2.2.0
 
 # these packages are present as dependencies, no need to install separately
-library('magrittr')
-library('stringr')
+library('magrittr') # 1.5
+library('stringr') # 1.1.0

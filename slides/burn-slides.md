@@ -1,7 +1,8 @@
-shiny modules in practice
+<!-- no title top of each slide -->
 
 BURN - 30th meetup
 ========================================================
+title: false
 author: Ildikó Czeller -- Data Analyst @Emarsys
 date: 2016-12-14
 autosize: true

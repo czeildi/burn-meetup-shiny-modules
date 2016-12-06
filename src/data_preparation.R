@@ -9,11 +9,12 @@ pullBaseWdiData <- function(series_name) {
     )
     
     if (! series_name %in% names(series_indicators)) {
-        stop(
-            'data for this series is not available, choose one of ',
-            str_c(names(series_indicators), collapse = ', '),
-            call. = FALSE
-        )
+        stop(str_c(
+             'data for ', 
+             series_name,
+             ' is not available, choose one of ',
+             str_c(names(series_indicators), collapse = ', ')
+        ), call. = FALSE)
     }
     
     if (!dir.exists('data')) {dir.create('data')}
@@ -32,9 +33,4 @@ pullBaseWdiData <- function(series_name) {
             setnames(series_indicators[[series_name]], series_name) %T>% 
             saveRDS(file_name)
     }
-}
-
-filterAggregateCountries <- function(dt) {
-    # countries: WDI_data[['country']]
-    # where region == 'Aggregates'
 }

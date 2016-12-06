@@ -13,10 +13,21 @@ Source: CRAN
 Version: 1.1-2
 Hash: c0d56cd15034f395874c870141870c25
 
+Package: RJSONIO
+Source: CRAN
+Version: 1.3-0
+Hash: fb672e20eb6f3010a3639f855d8ef6de
+
 Package: Rcpp
 Source: CRAN
 Version: 0.12.8
 Hash: 436ad5c23fad4e22224c7ac2fc82b049
+
+Package: WDI
+Source: CRAN
+Version: 2.4
+Hash: 0662dbf130136107809b0ac9306326e6
+Requires: RJSONIO
 
 Package: assertthat
 Source: CRAN

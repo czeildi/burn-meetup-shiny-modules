@@ -1,3 +1,4 @@
+<!--
 ---
 title: "World Bank stats"
 author: "Tinniam V Ganesh"
@@ -14,7 +15,6 @@ In this post I recreate some of the Gapminder charts with the help of R packages
 ```{r cache=TRUE}
 library(WDI)
 library(ggplot2)
-library(googleVis)
 library(plyr)
 ```
 
@@ -82,24 +82,6 @@ dd = complete.cases(cc)
 developmentDF = cc[dd,]
 ```
 
-## Create a motion chart
-```{r cache=TRUE}
-gg<- gvisMotionChart(cc,
-                                idvar = "country",
-                                timevar = "year",
-                                xvar = "GDP (US$)",
-                                yvar = "Life Expectancy (Years)",
-                                sizevar ="Total population",
-                                colorvar = "region")
-plot(gg)
-cat(gg$html$chart, file="chart11.html")
-
-```
-
-```{r}
-cat(gg$html$chart, file="chart1.html")
-```
-
 ## Get the data for the 2nd set of indicators
 
 1. Population
@@ -163,17 +145,4 @@ ff = join(ee,countries_df)
 
 ```
 
-## Create and display the motion chart
-```{r cache=TRUE}
-gg1<- gvisMotionChart(ff,
-                                idvar = "country",
-                                timevar = "year",
-                                xvar = "GDP US($)",
-                                yvar = "Access to Electricity (% popn)",
-                                sizevar ="Total population",
-                                colorvar = "region")
-plot(gg1)
-cat(gg1$html$chart, file="chart21.html")
-```
-
-
+-->

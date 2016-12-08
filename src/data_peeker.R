@@ -8,7 +8,7 @@ dataPeekerUI <- function(id) {
     )
 }
 
-dataPeeker <- function(input, output, session) {
+dataPeekeer <- function(input, output, session) {
     output$raw_data <- renderDataTable({
         pullBaseWdiData(input$series_name) %>% 
             .[, iso2c := NULL] %>% 

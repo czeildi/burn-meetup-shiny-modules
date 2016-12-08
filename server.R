@@ -1,8 +1,6 @@
 shinyServer(function(input, output) {
-    callModule(dataPeeker, 'population')
-    callModule(dataPeeker, 'life_expectancy')
-    callModule(dataPeeker, 'GDP_per_capita_income')
-    callModule(dataPeeker, 'births_per_woman')
+    callModule(dataPeekeer, 'population')
+    callModule(dataPeekeer, 'life_expectancy')
     output$default <- renderText({
         'The default value is: '
     })

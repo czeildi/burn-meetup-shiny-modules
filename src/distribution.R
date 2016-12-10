@@ -7,11 +7,20 @@ distributionUI <- function(id) {
   )
 }
 
+
 distribution <- function(input, output, session) {
   callModule(distributionPlot, '1980')
   callModule(distributionPlot, '2000')
   namespaceText(input, output, session)
 }
+
+
+namespaceText <- function(input, output, session) {
+  output$namespace_text <- renderText({
+    str_c('"Namespace": ', session$ns(''))
+  })
+}
+
 
 distributionPlotUI <- function(id) {
   ns <- NS(id)
@@ -27,6 +36,7 @@ distributionPlotUI <- function(id) {
   )
 }
 
+
 distributionPlot <- function(input, output, session) {
   inner_namespace <- reactive({
     session$ns('')
@@ -36,14 +46,9 @@ distributionPlot <- function(input, output, session) {
     
     series_name <- str_split(inner_namespace(), '-')[[1]][1]
     
-    dt <- pullBaseWdiData(series_name) %>% 
-      filterWdiData(series_name, input$start, input$end)
-    
-    max_value <- ifelse(series_name == 'births_per_woman', 8, 150000)
-    
-    ggplot(dt) + 
-      geom_histogram(aes_string(x = series_name), bins = 20) + 
-      coord_cartesian(xlim = c(0, max_value))
+    pullBaseWdiData(series_name) %>% 
+      filterWdiData(series_name, input$start, input$end) %>% 
+      histPlot(series_name)
   })
   
   output$inner_namespace <- renderText({
@@ -51,8 +56,13 @@ distributionPlot <- function(input, output, session) {
   })
 }
 
-namespaceText <- function(input, output, session) {
-  output$namespace_text <- renderText({
-    str_c('"Namespace": ', session$ns(''))
-  })
+
+histPlot <- function(dt, series_name) {
+  
+  max_value <- ifelse(series_name == 'births_per_woman', 8, 150000)
+  
+  ggplot(dt) + 
+    geom_histogram(aes_string(x = series_name), bins = 20) + 
+    coord_cartesian(xlim = c(0, max_value))
 }
+

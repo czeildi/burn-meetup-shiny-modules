@@ -252,7 +252,6 @@ callModule(distribution, 'GDP')
 ways of calling a module
 =======================================================
 
-
 ```r
 nsText <- function(...) {
   # ...
@@ -289,7 +288,7 @@ callModule(nsText,'x')
 
 ========================================================
 title: false
-
+type: section
 # Thank you!
 
 ## Reference

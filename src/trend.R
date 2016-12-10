@@ -11,10 +11,10 @@ trend <- function(input, output, session, min_year) {
   
   output$show_selectors <- renderText({
     str_c(
-      'In this tab, ',
+      'Trendline tab: ',
       input$trend_series_name,
-      ' is selected while on the data peeker tab, ',
-      input$series_name, '.'
+      ' Data peeker tab: ',
+      input$series_name
     )
   })
   
@@ -27,9 +27,10 @@ trend <- function(input, output, session, min_year) {
         .[, .(median = median(get(series_name), na.rm = TRUE)), by = year]
       
       ggplot(dt) + 
-        geom_line(aes(x = year, y = median), col = 'darkgreen') + 
+        geom_line(aes(x = year, y = median), col = 'darkgreen', size = 3) + 
         expand_limits(y = 0) +
-        ggtitle(input$trend_series_name)
+        ggtitle(input$trend_series_name) + 
+        theme(text = element_text(size = 16))
     }
   })
 }

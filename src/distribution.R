@@ -63,6 +63,7 @@ histPlot <- function(dt, series_name) {
   
   ggplot(dt) + 
     geom_histogram(aes_string(x = series_name), bins = 20, fill = 'darkgreen') + 
-    coord_cartesian(xlim = c(0, max_value))
+    coord_cartesian(xlim = c(0, max_value)) + 
+    theme(text = element_text(size = 16))
 }
 

@@ -6,7 +6,7 @@ shinyServer(function(input, output) {
     
     min_year <- reactive({input$`global-start`})
     
-    callModule(dataPeeker, 'population', min_year)
+    population_data <- callModule(dataPeeker, 'population', min_year)
     callModule(dataPeeker, 'life_expectancy', min_year)
     
     output$trend_chosen_series <- renderText({
@@ -23,4 +23,8 @@ shinyServer(function(input, output) {
     
     callModule(distribution, 'births_per_woman')
     callModule(distribution, 'GDP_per_capita_income')
+    
+    output$population_data <- renderDataTable({
+        population_data()
+    })
 })

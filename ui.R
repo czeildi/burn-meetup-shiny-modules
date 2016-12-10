@@ -23,6 +23,10 @@ shinyUI(fluidPage(
             'nesting',
             column(6, distributionUI('births_per_woman')),
             column(6, distributionUI('GDP_per_capita_income'))
+        ),
+        tabPanel(
+            'returned reactive',
+            dataTableOutput('population_data')
         )
     )
 ))

@@ -12,11 +12,6 @@ dataPeekerUI <- function(id) {
 }
 
 dataPeeker <- function(input, output, session, min_year) {
-    data <- reactive({
-        pullBaseWdiData(input$series_name) %>% 
-            filterWdiData(input$series_name, min_year())
-    })
-    
     output$raw_data <- renderDataTable({
          data() %>%
             filterForCountry(input$country) %>% 
@@ -33,5 +28,11 @@ dataPeeker <- function(input, output, session, min_year) {
             ns('country'), 'Choose country',
             choices = c('All', unique(data()$country))
         )
+    })
+    
+    # last expression is returned as from any other function
+    data <- reactive({
+        pullBaseWdiData(input$series_name) %>% 
+            filterWdiData(input$series_name, min_year())
     })
 }

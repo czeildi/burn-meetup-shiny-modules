@@ -4,7 +4,7 @@ shinyServer(function(input, output) {
         'The default value is: '
     })
     
-    min_year <- reactive({input$min_year})
+    min_year <- reactive({input$`global-start`})
     
     callModule(dataPeeker, 'population', min_year)
     callModule(dataPeeker, 'life_expectancy', min_year)
@@ -21,4 +21,6 @@ shinyServer(function(input, output) {
     callModule(trend, 'population', min_year)
     callModule(trend, 'life_expectancy', min_year)
     
+    callModule(distribution, 'births_per_woman')
+    callModule(distribution, 'GDP_per_capita_income')
 })

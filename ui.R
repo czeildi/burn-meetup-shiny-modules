@@ -17,7 +17,12 @@ shinyUI(fluidPage(
             'settings',
             checkboxInput('population-show_trendline', 'Show population trendline:', value = TRUE),
             checkboxInput('life_expectancy-show_trendline', 'Show life expectancy trendline:', value = TRUE),
-            numericInput('min_year', 'First year', min = 1960, max = 2015, value = 1960)
+            yearSelector('global', 'start', 1960)
+        ),
+        tabPanel(
+            'nesting',
+            column(6, distributionUI('births_per_woman')),
+            column(6, distributionUI('GDP_per_capita_income'))
         )
     )
 ))

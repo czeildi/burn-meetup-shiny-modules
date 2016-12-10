@@ -27,10 +27,12 @@ pullBaseWdiData <- function(series_name) {
     }
 }
 
-filterWdiData <- function(dt, series_name, min_year = 1960) {
+filterWdiData <- function(dt, series_name,
+                          min_year = CONST[['wdi_start_year']],
+                          max_year = year(Sys.Date())) {
     dt %>% 
         .[complete.cases(.)] %>% 
-        .[year >= min_year] %>% 
+        .[year >= min_year & year <= max_year] %>% 
         .[get(series_name) > 0]
 }
 

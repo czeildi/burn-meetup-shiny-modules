@@ -2,7 +2,7 @@ trendUI <- function(id) {
     ns <- NS(id)
     tagList(
         seriesSelector(id, prefix = 'trend_'),
-        plotOutput(ns('trendline'), height = 600)
+        plotOutput(ns('trendline'), height = 400)
     )
 }
 

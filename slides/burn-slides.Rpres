@@ -226,12 +226,8 @@ title: false
 ## server side
 ```{r}
 distribution <- function(input, output, session) {
-    series_name <- reactive({
-        str_replace(session$ns(''), '-', '')
-    })
-    callModule(distributionPlot, '1980', series_name())
-    callModule(distributionPlot, '2000', series_name())
-    namespaceText(input, output, session)
+    callModule(distributionPlot, '1980')
+    callModule(distributionPlot, '2000')
 }
 ```
 
@@ -240,9 +236,39 @@ callModule(distribution, 'births_per_woman')
 callModule(distribution, 'GDP')
 ```
 
-========================================================
+ways of calling a module
+=======================================================
 
-# Questions?
+```{r}
+nsText <- function(...) {
+  # ...
+}
+test <- function(...) {
+  # ...
+  nsText(
+    input,
+    output,
+    session
+  )
+}
+```
+```{r}
+callModule(test, 'x')
+```
+***
+```{r}
+nsText <- function(...) {
+  # ...
+}
+test <- function(...) {
+  # ...
+}
+```
+```{r}
+callModule(test, 'x')
+callModule(nsText, 'x')
+```
+
 
 Reference
 ========================================================

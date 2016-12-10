@@ -20,7 +20,9 @@ shinyServer(function(input, output) {
     callModule(trend, 'life_expectancy', min_year)
     
     callModule(distribution, 'births_per_woman')
+    # callModule(namespaceText, 'births_per_woman')
     callModule(distribution, 'GDP_per_capita_income')
+    # callModule(namespaceText, 'GDP_per_capita_income')
     
     output$population_data <- renderDataTable({
         population_data()

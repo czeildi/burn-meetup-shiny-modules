@@ -1,12 +1,14 @@
 shinyServer(function(input, output) {
-    callModule(dataPeeker, 'population')
-    callModule(dataPeeker, 'life_expectancy')
+    
     output$default <- renderText({
         'The default value is: '
     })
+    
     min_year <- reactive({input$min_year})
-    callModule(trend, 'population', min_year)
-    callModule(trend, 'life_expectancy', min_year)
+    
+    callModule(dataPeeker, 'population', min_year)
+    callModule(dataPeeker, 'life_expectancy', min_year)
+    
     output$trend_chosen_series <- renderText({
         str_c(
             input$`population-trend_series_name`,
@@ -15,4 +17,8 @@ shinyServer(function(input, output) {
             ' have been chosen'
         )
     })
+    
+    callModule(trend, 'population', min_year)
+    callModule(trend, 'life_expectancy', min_year)
+    
 })

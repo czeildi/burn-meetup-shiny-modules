@@ -12,7 +12,7 @@ pullBaseWdiData <- function(series_name) {
     file_name <- file.path('data', str_c(series_name, '.rds'))
     
     if (file.exists(file_name)) {
-        readRDS(file_name)
+        readRDS(file_name) %>% .[, iso2c := NULL]
     } else {
         WDI(
             indicator = series_indicators[[series_name]],
@@ -22,6 +22,21 @@ pullBaseWdiData <- function(series_name) {
         ) %>% 
             data.table() %>% 
             setnames(series_indicators[[series_name]], series_name) %T>% 
-            saveRDS(file_name)
+            saveRDS(file_name) %>% 
+            .[, iso2c := NULL]
     }
+}
+
+filterWdiData <- function(dt, series_name, min_year = 1960) {
+    dt %>% 
+        .[complete.cases(.)] %>% 
+        .[year >= min_year] %>% 
+        .[get(series_name) > 0]
+}
+
+filterForCountry <- function(dt, country_param) {
+    if (is.null(country_param) || country_param == 'All') {
+        return (dt)
+    }
+    dt[country == country_param]
 }

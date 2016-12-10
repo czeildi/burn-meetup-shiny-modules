@@ -12,10 +12,9 @@ trend <- function(input, output, session, min_year) {
             series_name <- input$trend_series_name
             
             dt <- pullBaseWdiData(series_name) %>% 
+                filterWdiData(series_name, min_year()) %>% 
                 .[, median(get(series_name), na.rm = TRUE), by = 'year'] %>%
-                .[complete.cases(.)] %>% 
-                setnames('V1', str_c('median_', series_name)) %>% 
-                .[year >= min_year()]
+                setnames('V1', str_c('median_', series_name))
             
             ggplot(dt) + 
                 geom_line(aes_string(x = 'year', y = str_c('median_', series_name))) + 

@@ -3,20 +3,35 @@ dataPeekerUI <- function(id) {
     tagList(
         h3(textOutput(ns('my_default'))),
         h3(id),
-        seriesSelector(id),
+        fluidRow(
+            column(6, seriesSelector(id)),
+            column(6, uiOutput(ns('country_selector')))
+        ),
         dataTableOutput(ns('raw_data'))
     )
 }
 
-dataPeeker <- function(input, output, session) {
-    output$raw_data <- renderDataTable({
+dataPeeker <- function(input, output, session, min_year) {
+    data <- reactive({
         pullBaseWdiData(input$series_name) %>% 
-            .[, iso2c := NULL] %>% 
-            .[get(input$series_name) > 0] %>% 
+            filterWdiData(input$series_name, min_year())
+    })
+    
+    output$raw_data <- renderDataTable({
+         data() %>%
+            filterForCountry(input$country) %>% 
             .[order(get(input$series_name))]
     }, options = list(pageLength = 5, lengthMenu = c(5,25,50,100,200)))
     
     output$my_default <- renderText({
         'Here the default value is: '
+    })
+    
+    output$country_selector <- renderUI({
+        ns <- session$ns
+        selectInput(
+            ns('country'), 'Choose country',
+            choices = c('All', unique(data()$country))
+        )
     })
 }

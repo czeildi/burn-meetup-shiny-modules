@@ -1,7 +1,7 @@
 shinyUI(fluidPage(
   title = "BURN - shiny modules",
   navbarPage(
-    'demo shiny modules',
+    'shiny modules demo',
     tabPanel(
       'peek into data',
       column(6, dataPeekerUI('population')),

@@ -62,7 +62,7 @@ histPlot <- function(dt, series_name) {
   max_value <- ifelse(series_name == 'births_per_woman', 8, 150000)
   
   ggplot(dt) + 
-    geom_histogram(aes_string(x = series_name), bins = 20) + 
+    geom_histogram(aes_string(x = series_name), bins = 20, fill = 'darkgreen') + 
     coord_cartesian(xlim = c(0, max_value))
 }
 

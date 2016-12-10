@@ -3,7 +3,7 @@ dataPeekerUI <- function(id) {
     tagList(
         h2(textOutput(ns('my_default'))),
         h2(id),
-        selectInput(ns('series_name'), 'Choose series:', choices = names(series_indicators), selected = id),
+        seriesSelector(id),
         dataTableOutput(ns('raw_data'))
     )
 }

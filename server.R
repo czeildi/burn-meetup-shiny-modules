@@ -4,4 +4,6 @@ shinyServer(function(input, output) {
     output$default <- renderText({
         'The default value is: '
     })
+    callModule(trend, 'population')
+    callModule(trend, 'life_expectancy')
 })

@@ -9,6 +9,7 @@ shinyUI(fluidPage(
         ),
         tabPanel(
             'trend',
+            h3(textOutput('trend_chosen_series'), align = 'center'),
             column(6, trendUI('population')),
             column(6, trendUI('life_expectancy'))
         )

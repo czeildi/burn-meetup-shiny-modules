@@ -1,8 +1,8 @@
 dataPeekerUI <- function(id) {
     ns <- NS(id)
     tagList(
-        h2(textOutput(ns('my_default'))),
-        h2(id),
+        h3(textOutput(ns('my_default'))),
+        h3(id),
         seriesSelector(id),
         dataTableOutput(ns('raw_data'))
     )

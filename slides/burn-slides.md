@@ -13,7 +13,6 @@ autosize: true
 
 Shiny: web framework for R
 ========================================================
-title: false
 
 ### server side
 
@@ -36,9 +35,9 @@ shinyUI(fluidPage(
 ))
 ```
 
-corresponding server and ui: modules
+matching server and ui
 ========================================================
-title: false
+
 ### server module
 
 ```r
@@ -61,9 +60,8 @@ dataPeekerUI <- function(id) {
 ```
 
 
-corresponding server and ui
+matching server and ui
 ========================================================
-title: false
 
 ## server side
 
@@ -84,7 +82,7 @@ dataPeekerUI('life_expectancy')
 
 same id, multiple modules 1
 ========================================================
-title: false
+
 ## ui side
 
 ```r
@@ -108,7 +106,7 @@ checkboxInput('population-x', 'X:')
 
 same id, multiple modules 2
 ========================================================
-title: false
+
 ## server side
 
 ```r
@@ -129,9 +127,9 @@ filters <- function(input, output, session) {
 callModule(filters, 'population')
 ```
 
-access module ui-s from outside
+access ui element from outside
 ========================================================
-title: false
+
 ## ui side
 
 ```r
@@ -147,9 +145,9 @@ global_year <- reactive({
 })
 ```
 
-pass reactives to module
+pass reactive to module
 ========================================================
-title: false
+
 ## server side
 
 ```r
@@ -161,8 +159,7 @@ callModule(dataPeeker, 'popul', global_year)
 ```
 
 ```r
-dataPeeker <- function(input, output, 
-                       session, year) {
+dataPeeker <- function(..., year) {
   
   output$dt <- renderDataTable({
     data() %>% 
@@ -170,14 +167,13 @@ dataPeeker <- function(input, output,
   })
 }
 ```
-reactive ui
+
+uiOutput & renderUI
 ========================================================
-title: false
-## server side
+
 
 ```r
-countrySelector <- function(input, output,
-                            session) {
+country <- function(...) {
   
   output$country_selector <- renderUI({
     
@@ -196,12 +192,10 @@ countrySelector <- function(input, output,
 
 return reactive from module
 ========================================================
-title: false
-## server side
+
 
 ```r
-countrySelector <- function(input, output,
-                            session) {
+country <- function(...) {
   # ...
   # this is returned: last reactive
   chosen_country <- reactive({
@@ -209,15 +203,16 @@ countrySelector <- function(input, output,
   })
 }
 
-country <- callModule(countrySelector, 'popul')
+p_country <- callModule(country, 'popul')
+
 output$popul_chosen_country <- renderText({
-  country()
+  p_country()
 })
 ```
 
 nesting modules 1
 ========================================================
-title: false
+
 ## ui side
 
 ```r
@@ -238,11 +233,11 @@ distributionUI('GDP')
 
 nesting modules 2
 ========================================================
-title: false
+
 ## server side
 
 ```r
-distribution <- function(input, output, session) {
+distribution <- function(...) {
     callModule(distributionPlot, '1980')
     callModule(distributionPlot, '2000')
 }
@@ -287,13 +282,16 @@ test <- function(...) {
 ```
 
 ```r
-callModule(test, 'x')
-callModule(nsText, 'x')
+callModule(test,'x')
+callModule(nsText,'x')
 ```
 
 
-Reference
 ========================================================
+title: false
 
+# Thank you!
+
+## Reference
 - <https://github.com/czeildi/burn-meetup-shiny-modules>
 - <https://twitter.com/czeildi>

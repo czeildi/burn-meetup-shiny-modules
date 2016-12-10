@@ -204,6 +204,41 @@ output$popul_chosen_country <- renderText({
 nesting modules 1
 ========================================================
 title: false
+## ui side
+```{r}
+distributionUI <- function(id) {
+    ns <- NS(id)
+    tagList(
+        distributionPlotUI(ns('1980')),
+        distributionPlotUI(ns('2000'))
+    )
+}
+```
+
+```{r}
+distributionUI('births_per_woman')
+distributionUI('GDP')
+```
+
+nesting modules 2
+========================================================
+title: false
+## server side
+```{r}
+distribution <- function(input, output, session) {
+    series_name <- reactive({
+        str_replace(session$ns(''), '-', '')
+    })
+    callModule(distributionPlot, '1980', series_name())
+    callModule(distributionPlot, '2000', series_name())
+    namespaceText(input, output, session)
+}
+```
+
+```{r}
+callModule(distribution, 'births_per_woman')
+callModule(distribution, 'GDP')
+```
 
 ========================================================
 

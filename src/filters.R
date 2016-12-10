@@ -1,12 +1,15 @@
 filterAggregateCountries <- function(dt) {
-    # countries: WDI_data[['country']]
-    # where region == 'Aggregates'
+    real_countries <- WDI_data[['country']] %>% 
+        data.table() %>% 
+        .[region != 'Aggregates', country]
+    dt[country %in% real_countries]
 }
 
 filterWdiData <- function(dt, series_name,
                           min_year = CONST[['wdi_start_year']],
                           max_year = year(Sys.Date())) {
     dt %>% 
+        filterAggregateCountries() %>% 
         .[complete.cases(.)] %>% 
         .[year >= min_year & year <= max_year] %>% 
         .[get(series_name) > 0]

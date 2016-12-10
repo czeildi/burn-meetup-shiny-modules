@@ -8,13 +8,15 @@ pullBaseWdiData <- function(series_name) {
         ), call. = FALSE)
     }
     
-    if (!dir.exists('data')) {dir.create('data')}
+    if (!dir.exists('data')) {
+        dir.create('data')
+    }
     file_name <- file.path('data', str_c(series_name, '.rds'))
     
     if (file.exists(file_name)) {
-        readRDS(file_name) %>% .[, iso2c := NULL]
+        dt <- readRDS(file_name)
     } else {
-        WDI(
+        dt <- WDI(
             indicator = series_indicators[[series_name]],
             country = 'all',
             start = CONST[['wdi_start_year']],
@@ -22,7 +24,7 @@ pullBaseWdiData <- function(series_name) {
         ) %>% 
             data.table() %>% 
             setnames(series_indicators[[series_name]], series_name) %T>% 
-            saveRDS(file_name) %>% 
-            .[, iso2c := NULL]
+            saveRDS(file_name)
     }
+    dt[, iso2c := NULL][]
 }

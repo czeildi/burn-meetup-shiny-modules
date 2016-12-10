@@ -1,10 +1,8 @@
 shinyServer(function(input, output) {
     
-    output$default <- renderText({
-        'The default value is: '
+    min_year <- reactive({
+        input$`global-start`
     })
-    
-    min_year <- reactive({input$`global-start`})
     
     population_data <- callModule(dataPeeker, 'population', min_year)
     callModule(dataPeeker, 'life_expectancy', min_year)

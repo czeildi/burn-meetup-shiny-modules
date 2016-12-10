@@ -8,19 +8,19 @@ shinyUI(fluidPage(
             column(6, dataPeekerUI('life_expectancy'))
         ),
         tabPanel(
-            'trend',
+            'trendline',
             h3(textOutput('trend_chosen_series'), align = 'center'),
             column(6, trendUI('population')),
             column(6, trendUI('life_expectancy'))
         ),
         tabPanel(
-            'settings',
+            'global settings',
             checkboxInput('population-show_trendline', 'Show population trendline:', value = TRUE),
             checkboxInput('life_expectancy-show_trendline', 'Show life expectancy trendline:', value = TRUE),
-            yearSelector('global', 'start', 1960)
+            yearSelector('global', 'start', CONST[['wdi_start_year']])
         ),
         tabPanel(
-            'nesting',
+            'nesting modules',
             column(6, distributionUI('births_per_woman')),
             column(6, distributionUI('GDP_per_capita_income'))
         ),

@@ -13,11 +13,10 @@ trend <- function(input, output, session, min_year) {
             
             dt <- pullBaseWdiData(series_name) %>% 
                 filterWdiData(series_name, min_year()) %>% 
-                .[, median(get(series_name), na.rm = TRUE), by = 'year'] %>%
-                setnames('V1', str_c('median_', series_name))
+                .[, .(median = median(get(series_name), na.rm = TRUE)), by = year]
             
             ggplot(dt) + 
-                geom_line(aes_string(x = 'year', y = str_c('median_', series_name))) + 
+                geom_line(aes(x = year, y = median)) + 
                 expand_limits(y = 0) +
                 ggtitle(str_c(
                     series_name, ' is plotted but ',

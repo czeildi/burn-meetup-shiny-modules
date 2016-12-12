@@ -35,15 +35,25 @@ shinyUI(fluidPage(
 ))
 ```
 
+demo data
+========================================================
+
+## world population & life expectancy data
+-  data for every country yearly
+-  data from world bank
+- http://data.worldbank.org/data-catalog/world-development-indicators
+- accessed by ~~WDI~~ R package
+
 matching server and ui
 ========================================================
 
 ### server module
 
 ```r
-dataPeeker <- function(input, output, session) {
-  # refer to any input element under same id
+dataPeeker <- function(input,output,session){
+  
   output$raw_data <- renderDataTable({
+    # simple name of input fields
     pullBaseWdiData(input$series_name)
   })
 }
@@ -285,6 +295,13 @@ callModule(test,'x')
 callModule(nsText,'x')
 ```
 
+wrap-up
+========================================================
+
+- pattern of ui & server code
+- flexible
+- reusable
+- clear dependencies
 
 ========================================================
 title: false

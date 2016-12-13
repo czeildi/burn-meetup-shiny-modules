@@ -3,7 +3,6 @@
 
 BURN - 30th meetup
 ========================================================
-title: false
 author: Ildikó Czeller -- Data Analyst @Emarsys
 css: custom.css
 date: 2016-12-14
@@ -11,10 +10,19 @@ autosize: true
 
 # shiny modules in practice
 
+demo data
+========================================================
+title: false
+# demo data from worldbank
+
+## [world development indicators](http://data.worldbank.org/data-catalog/world-development-indicators)
+
+## accessed by ~~WDI~~ R package
+
 Shiny: web framework for R
 ========================================================
-
-### server side
+title: false
+# Shiny: web framework
 
 ```r
 shinyServer(function(input, output) {
@@ -25,75 +33,153 @@ shinyServer(function(input, output) {
     })
 })
 ```
-### ui side
 
 ```r
 shinyUI(fluidPage(
   
-  title = 'Plot',
   plotOutput('my_plot')
 ))
 ```
 
-demo data
+motivation
 ========================================================
+title: false
+# motivation
+<!-- repeating ui widgets -->
+<!-- manually keeping record of ui - server matches -->
 
-## world population & life expectancy data
--  data for every country yearly
--  data from world bank
-- http://data.worldbank.org/data-catalog/world-development-indicators
-- accessed by ~~WDI~~ R package
+
+```r
+selectInput('population_country', ...),
+selectInput('trendline_country', ...)
+```
+
+
+```r
+collectData(input$population_country, ...)
+filterData(input$population_country, ...)
+
+collectData(input$trendline_country, ...)
+filterData(input$trendline_country, ...)
+```
+
+simple functions: not enough
+=======================================================
+title: false
+# with simple functions
+
+```r
+countrySelector <- function(id) {
+  selectInput(str_c('id', '_country'), ...)
+}
+countrySelector('population'),
+countrySelector('trendline')
+```
+
+```r
+collectData(input$population_country, ...)
+filterData(input$population_country, ...)
+
+collectData(input$trendline_country, ...)
+filterData(input$trendline_country, ...)
+```
+
+<!-- pass whole input object? -->
+<!-- manually adding prefix: error-prone -->
+
+solution
+========================================================
+title: false
+# (a) solution: modules
 
 matching server and ui
 ========================================================
-
-### server module
+title: false
+# matching server and ui
 
 ```r
 dataPeeker <- function(input,output,session){
   
   output$raw_data <- renderDataTable({
-    # simple name of input fields
     pullBaseWdiData(input$series_name)
   })
 }
 ```
 
-### ui module
-
 ```r
 dataPeekerUI <- function(id) {
   ns <- NS(id)
-  # ns('any_text') == `id`-any_text
   dataTableOutput(ns('raw_data'))
 }
 ```
 
-
 matching server and ui
 ========================================================
-
-## server side
+title: false
+# matching server and ui
+## server
 
 ```r
 callModule(dataPeeker, 'population')
 callModule(dataPeeker, 'life_expectancy')
 ```
 
-## ui side
+## ui
 
 ```r
 dataPeekerUI('population'),
 dataPeekerUI('life_expectancy')
 ```
 
-- `dataPeeker` <--> `dataPeekerUI` : good convention
-- called with same id, namely ~~population~~: must have
+<!-- convention in function names -->
+<!-- must be called with same id, namely ~~population~~ -->
+
+namespace
+========================================================
+title: false
+# `ns <- NS(id)`
+# short for "namespace"
+<!--Miért az idézőjelek? mert ez nem valódi namespace -->
+# id: unique within namespace
+<!-- namespacen belül rövi névvel, kívül hosszú névvel tudsz egy elemre hivatkozni -->
+<!-- ns: function which appends prefix -->
+
+```r
+id <- 'population'
+ns <- NS(id)
+ns('country') = 'population-country'
+ns('year') = 'population-year'
+```
+
+access ui element from outside
+========================================================
+title: false
+# access ui elements
+
+
+```r
+yearSelectorUI <- function(id) {
+  numericInput(
+    NS(id)('year'), 'Year:', value = 2000
+  )
+}
+```
+
+```r
+yearSelectorUI('global')
+```
+
+
+```r
+global_year <- reactive({
+  input$`global-year`
+})
+```
 
 same id, multiple modules 1
 ========================================================
-
-## ui side
+title: false
+# multiple modules, one id
 
 ```r
 countryShowerUI <- function(id) {
@@ -113,20 +199,19 @@ countryShowerUI('population')
 yearSelectorUI('population') 
 checkboxInput('population-x', 'X:')
 ```
-
+<!-- létrejött a 3 ui változó -->
+<!-- innentől ha benne vannak a scopeban, tudok rájuk hivatkozni: modulon belül és modulon kívül-->
 same id, multiple modules 2
 ========================================================
-
-## server side
+title: false
+# multiple modules, one id
 
 ```r
 filters <- function(input, output, session) {
   output$text <- renderText({
     str_c(
       input$country,
-      ' and ',
       input$year,
-      ' and ',
       input$x
     )
   })
@@ -137,28 +222,10 @@ filters <- function(input, output, session) {
 callModule(filters, 'population')
 ```
 
-access ui element from outside
-========================================================
-
-## ui side
-
-```r
-yearSelectorUI('global')
-```
-## server side
-
-```r
-global_year <- reactive({
-  
-  input$`global-year`
-  
-})
-```
-
 pass reactive to module
 ========================================================
-
-## server side
+title: false
+# pass reactive to module
 
 ```r
 global_year <- reactive({
@@ -178,31 +245,10 @@ dataPeeker <- function(..., year) {
 }
 ```
 
-uiOutput & renderUI
-========================================================
-
-
-```r
-country <- function(...) {
-  
-  output$country_selector <- renderUI({
-    
-    ns <- session$ns
-    
-    selectInput(
-      ns('country'), '?', choices = countries
-    )
-  })
-  
-  chosen_country <- reactive({
-    input$country
-  })
-}
-```
-
 return reactive from module
 ========================================================
-
+title: false
+# return reactive
 
 ```r
 country <- function(...) {
@@ -220,10 +266,66 @@ output$popul_chosen_country <- renderText({
 })
 ```
 
-nesting modules 1
+uiOutput & renderUI
 ========================================================
+title: false
+# dynamic UI
 
-## ui side
+```r
+country <- function(input,output,session) {
+  
+  output$country_selector <- renderUI({
+    
+    ns <- session$ns
+    selectInput(
+      ns('country'), '?', choices = countries
+    )
+  })
+  
+  chosen_country <- reactive({
+    input$country
+  })
+}
+```
+
+module hierarchy
+=======================================================
+title: false
+# hierarchy
+## nest one copy 
+## nest multiple copies
+
+nest one copy
+=======================================================
+title: false
+## nest one copy: like simple functions
+
+```r
+nsText <- function(input, output, sesion) {
+  # ...
+}
+test <- function(input, output, session) {
+  # ...
+  nsText(input, output, session)
+}
+```
+
+```r
+callModule(test, 'x')
+```
+## same effect as calling both from outside
+
+
+```r
+callModule(test, 'x')
+callModule(nsText,'x')
+```
+<!-- but less code inside and outside as well-->
+
+nest multiple copies 1
+========================================================
+title: false
+# nest multiple copies
 
 ```r
 distributionUI <- function(id) {
@@ -241,10 +343,10 @@ distributionUI('births_per_woman')
 distributionUI('GDP')
 ```
 
-nesting modules 2
+nest multiple modules 2
 ========================================================
-
-## server side
+title: false
+# nest multiple copies
 
 ```r
 distribution <- function(...) {
@@ -259,55 +361,20 @@ callModule(distribution, 'births_per_woman')
 callModule(distribution, 'GDP')
 ```
 
-ways of calling a module
-=======================================================
-
-```r
-nsText <- function(...) {
-  # ...
-}
-test <- function(...) {
-  # ...
-  nsText(
-    input,
-    output,
-    session
-  )
-}
-```
-
-```r
-callModule(test, 'x')
-```
-***
-
-```r
-nsText <- function(...) {
-  # ...
-}
-test <- function(...) {
-  # ...
-}
-```
-
-```r
-callModule(test,'x')
-callModule(nsText,'x')
-```
-
-wrap-up
+Take-aways
 ========================================================
 
-- pattern of ui & server code
-- flexible
-- reusable
-- clear dependencies
+# flexible 
+<!-- : more than a function-->
+# reusable
+# clear dependencies
+# enables hierarchy
 
 ========================================================
 title: false
 type: section
 # Thank you!
 
-## Reference
-- <https://github.com/czeildi/burn-meetup-shiny-modules>
-- <https://twitter.com/czeildi>
+## Reference:
+## <https://github.com/czeildi/burn-meetup-shiny-modules>
+## <https://twitter.com/czeildi>
